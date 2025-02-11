@@ -1,0 +1,72 @@
+SELECT:
+
+SELECT * FROM Production.Product;
+todas as colunas da tabela Production.Product
+
+SELECT ProductID, Name, ListPrice, StandardCost
+FROM Production.Product;
+o ProductID, o nome, o preço de venda e o custo da tabela Production.Product
+
+SELECT ProductID,
+      Name + '(' + ProductNumber + ')',
+  ListPrice - StandardCost
+FROM Production.Product;
+o ProductID seguido do ProductNumber entre parêntesis (concatena os caracteres), seguido do lucro (preço de venda menos custo), da tabela Production.Product
+
+SELECT ProductID AS ID,
+      Name + '(' + ProductNumber + ')' AS ProductName,
+  ListPrice - StandardCost AS Markup
+FROM Production.Product;
+o mesmo que a tabela anterior mas deu o nome (alias) ProductName ao nome concatenado ao ProductNumber entre aspas e deu o nome Markup à diferença entre o ListPrice e o StandardCost
+
+CAST: função que converte o valor de um determinado data type com outro data type alvo caso seja compatível. Se falhar retorna erro
+SELECT CAST(ProductID AS varchar(4)) + ': ' + Name AS ProductName
+FROM Production.Product;
+converte o valor (numérico) ProductID num varchar com até 4 caracteres para o poder concatenar com a string ': ' e dá-lhe o alias ProductName
+
+TRY_CAST: semelhante a CAST mas retorna NULL em vez de erro
+SELECT TRY_CAST(Size AS integer) As NumericSize
+FROM Production.Product;
+tenta converter para integer (neste exemplo algumas entradas eram strings apenas compostas por números e outras apenas (ou também) compostas por letras)
+se a entrada tiver letras vai devolver NULL
+
+CONVERT: semelhante a CAS mas específico a TSQL, não é ANSI e permite definir formatações (date, datetime...)
+SELECT CONVERT(varchar(4), ProductID) + ': ' + Name AS ProductName
+FROM Production.Product;
+
+TRY_CONVERT: semelhante a CONVERT mas devolve NULL em vez de erro quando não é bem-sucedido
+
+PARSE e TRY_PARSE: específicas para converter strings formatadas que representam valores numéricos ou date/time.
+
+STR: converte valores numéricos em varchar
+
+ISNULL: recebe dois argumentos e caso o primeiro argumento não seja nulo devolve-o e caso seja, devolve o segundo
+SELECT FirstName,
+      ISNULL(MiddleName, 'None') AS MiddleIfAny,
+      LastName
+FROM Sales.Customer;
+selectiona o primeiro nome, caso o nome do meio exista, devolve-o e caso não exista devolve None e dá o nome MiddleIfAny a essa coluna e devolve o apelido
+
+ISNULL não é ANSI standard e COALESCE é uma alternativa
+COALESCE: recebe um número variável de argumentos (expressões) e retorna a primeira expressão não NULL
+    sintaxe:
+        SELECT COALESCE ( expression1, expression2, [ ,...n ])
+
+SELECT EmployeeID,
+      COALESCE(HourlyRate * 40,
+                WeeklySalary,
+                Commission * SalesQty) AS WeeklyEarnings
+FROM HR.Wages;
+devolve o EmployeeID e, segundo o alias WeeklyEarnings o primeiro resultado não NULL de entre: ordenado por hora * 40, salário semanal e comissão * quantidade de vendas
+se todos os resultados de todas as expressões do COALESCE forem NULL, vai retornar NULL
+
+NULLIF: premite retornar NULL sob certas condições -> útil para limpar informação
+recebe dois argumentos e retorna NULL se forem equivalentes. Se não forem, retorna o primeiro argumento
+
+SELECT SalesOrderID,
+      ProductID,
+      UnitPrice,
+      NULLIF(UnitPriceDiscount, 0) AS Discount
+FROM Sales.SalesOrderDetail;
+com o alias Discount, devolve NULL se o UnitPriceDiscount for zero, caso contrário, devolve o UnitPriceDiscount
+
