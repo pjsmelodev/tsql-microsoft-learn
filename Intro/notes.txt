@@ -159,8 +159,7 @@ Challenges:
 1)
 
 1.1) 
-SELECT *
-FROM SalesLT.Customer;
+SELECT * FROM SalesLT.Customer;
 847 linhas
 
 1.2)
@@ -172,3 +171,12 @@ FROM SalesLT.Customer;
 SELECT SalesPerson, ISNULL(Title, '') + ' ' + LastName AS CustomerName, Phone
 FROM SalesLT.Customer;
 847 linhas 
+
+2)
+
+2.1)
+SELECT CAST(CustomerID AS Varchar) + ': ' + CompanyName AS CustomerCompany
+FROM SalesLT.Customer;
+847 linhas
+
+2.2)
