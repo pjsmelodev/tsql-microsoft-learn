@@ -70,3 +70,105 @@ SELECT SalesOrderID,
 FROM Sales.SalesOrderDetail;
 com o alias Discount, devolve NULL se o UnitPriceDiscount for zero, caso contrário, devolve o UnitPriceDiscount
 
+Use Select queries to retrieve data:
+2) 295 linhas
+SELECT * FROM SalesLT.Product; 
+
+4) 295 linhas
+SELECT Name, StandardCost, ListPrice
+FROM SalesLT.Product;
+
+6) 295 linhas
+SELECT Name, ListPrice - StandardCost
+FROM SalesLT.Product;
+
+8) 295 linhas
+SELECT Name AS ProductName, ListPrice - StandardCost AS Markup
+FROM SalesLT.Product;
+
+10) 295 linhas
+SELECT ProductNumber, Color, Size, Color + ', ' + Size AS ProductDetails
+FROM SalesLT.Product;
+
+Work with data types:
+1) erro -> 0 linhas
+SELECT ProductID + ': ' + Name AS ProductName
+FROM SalesLT.Product; 
+erro -> não pode concatenar valores numéricos com strings
+
+3) 295 linhas
+SELECT CAST(ProductID AS varchar(5)) + ': ' + Name AS ProductName
+FROM SalesLT.Product; 
+
+5) 295 linhas
+SELECT CONVERT(varchar(5), ProductID) + ': ' + Name AS ProductName
+FROM SalesLT.Product; 
+
+7) 295 linhas
+ SELECT SellStartDate,
+    CONVERT(nvarchar(30), SellStartDate) AS ConvertedDate,
+     CONVERT(nvarchar(30), SellStartDate, 126) AS ISO8601FormatDate
+ FROM SalesLT.Product; 
+
+8) erro
+ SELECT Name, CAST(Size AS Integer) AS NumericSize
+ FROM SalesLT.Product; 
+
+10) 295 linhas
+SELECT Name, TRY_CAST(Size AS Integer) AS NumericSize
+FROM SalesLT.Product; 
+gera Nulls em vez de erro
+
+Handle NULL values:
+1) 295 linhas
+ SELECT Name, ISNULL(TRY_CAST(Size AS Integer),0) AS NumericSize
+ FROM SalesLT.Product;
+
+3) 295 linhas
+ SELECT ProductNumber, ISNULL(Color, '') + ', ' + ISNULL(Size, '') AS ProductDetails
+ FROM SalesLT.Product;
+
+4) 295 linhas
+ SELECT Name, NULLIF(Color, 'Multi') AS SingleColor
+ FROM SalesLT.Product;
+
+5) 295 linhas
+ SELECT Name, COALESCE(SellEndDate, SellStartDate) AS StatusLastUpdated
+ FROM SalesLT.Product;
+
+6) 295 linhas
+ SELECT Name,
+     CASE
+         WHEN SellEndDate IS NULL THEN 'Currently for sale'
+         ELSE 'No longer available'
+     END AS SalesStatus
+ FROM SalesLT.Product;
+
+7) 295 linhas
+ SELECT Name,
+     CASE Size
+         WHEN 'S' THEN 'Small'
+         WHEN 'M' THEN 'Medium'
+         WHEN 'L' THEN 'Large'
+         WHEN 'XL' THEN 'Extra-Large'
+         ELSE ISNULL(Size, 'n/a')
+     END AS ProductSize
+ FROM SalesLT.Product;
+
+Challenges:
+1)
+
+1.1) 
+SELECT *
+FROM SalesLT.Customer;
+847 linhas
+
+1.2)
+SELECT Title, FirstName, MiddleName, LastName, Suffix
+FROM SalesLT.Customer;
+847 linhas
+
+1.3)
+SELECT SalesPerson, ISNULL(Title, '') + ' ' + LastName AS CustomerName, Phone
+FROM SalesLT.Customer;
+847 linhas 
