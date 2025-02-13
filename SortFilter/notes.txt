@@ -1,0 +1,156 @@
+ORDER BY:
+
+* Última fase de um SELECT
+    sintaxe:
+        SELECT<select_list>
+        FROM <table_source>
+        ORDER BY <order_by_list> [ASC|DESC];
+
+* Pode receber vários tipos de elementos:
+    * Colunas por nome
+    * Colunas por valor de posição
+    * Colunas não incluidas no próprio SELECT
+
+SORT:
+
+* "Direção" de disposição da informação -> DESC por defeito
+    exemplo:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        ORDER BY Category ASC, Price DESC;
+    
+TOP:
+
+* Seleciona as primeiras linhas (precisa de um valor como argumento)
+    sintaxe:
+        SELECT TOP (N) <column_list>
+        FROM <table_source>
+        WHERE <search_condition>
+        ORDER BY <order list> [ASC|DESC];
+
+WITH TIES:
+
+* Opção de TOP que devolve todos as outras linhas que tenham o mesmo valor que o último valor devolvido pelo TOP, de forma a não quebrar informação ordenada
+    exemplo:
+        SELECT TOP 10 WITH TIES Name, ListPrice
+        FROM Production.Product
+        ORDER BY ListPrice DESC;
+        Devolve os últimos 10 nomes mais todas as outras linhas que segundo a mesmo ordenação tenham o mesmo nome e o preço
+
+PERCENT:
+
+* Permite usar percentagens em vez de valores inteiros (também aceita a opção WITH TIES)
+    exemplos:
+        SELECT TOP 10 PERCENT Name, ListPrice
+        FROM SalesLT.Product
+        ORDER BY ListPrice DESC;
+
+        SELECT TOP 10 PERCENT WITH TIES Name, ListPrice
+        FROM SalesLT.Product
+        ORDER BY ListPrice DESC;
+
+OFFSET-FETCH:
+
+* Permite retornar apenas um range das linhas selecionadas pela query
+    sintaxe:
+        OFFSET { integer_constant | offset_row_count_expression } { ROW | ROWS }
+        [FETCH { FIRST | NEXT } {integer_constant | fetch_row_count_expression } { ROW | ROWS } ONLY]
+    exemplos:
+        SELECT ProductID, ProductName, ListPrice    
+        FROM Production.Product
+        ORDER BY ListPrice DESC                         -> ordena por preço descendentemente
+        OFFSET 0 ROWS --Skip zero rows                  -> não ignora nenhuma linha
+        FETCH NEXT 10 ROWS ONLY; --Get the next 10      -> devolve as primeiras 10 linhas
+
+        SELECT ProductID, ProductName, ListPrice
+        FROM Production.Product
+        ORDER BY ListPrice DESC 
+        OFFSET 10 ROWS --Skip 10 rows                   -> ignora as 10 primeiras linhas
+        FETCH NEXT 10 ROWS ONLY; --Get the next 10      -> devolve as 10 linhas seguintes
+
+DISTINCT:
+
+* Ignora valores duplicados
+    exemplo:
+        SELECT DISTINCT City, CountryRegion
+        From Production.Supplier
+        ORDER BY CountryRegion, City;
+            devolve cidades e regiões de países não repetidos (a ordem importa)
+
+WHERE:
+
+* conjunto de condições de pesquisa
+    exemplo:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        WHERE ProductCategoryID = 2;
+
+* OPERADORES DE COMPARAÇÃO:
+    * = (equals)
+    * <> (not equals)
+    * > (greater than)
+    * >= (greater than or equal to)
+    * < (less than)
+    * <= (less than or equal to)
+
+IS NULL / IS NOT NULL:
+    exemplo:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        WHERE ProductName IS NOT NULL;
+
+MULTIPLAS CONDIÇÕES WHERE:
+    exemplo:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        WHERE ProductCategoryID = 2
+            AND ListPrice < 10.00;
+
+IN: 
+
+* Aceita valores dentro de um conjunto num WHERE (para evitar o uso de ORs)
+    exemplo sem IN:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        WHERE ProductCategoryID = 2
+            OR ProductCategoryID = 3
+            OR ProductCategoryID = 4;
+    
+    exemplo com IN:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        WHERE ProductCategoryID IN (2, 3, 4);
+
+BETWEEN:
+
+* Aceita valores dentro de dois valores (inclusivé)
+    exemplo sem BETWEEN:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        WHERE ListPrice >= 1.00
+            AND ListPrice <= 10.00;
+    
+    exemplo com BETWEEN:
+        SELECT ProductCategoryID AS Category, ProductName
+        FROM Production.Product
+        WHERE ListPrice BETWEEN 1.00 AND 10.00;
+
+LIKE:
+
+* Permite o uso de Wildcards para pesquisas mais elaboradas
+    exemplos:
+        SELECT Name, ListPrice
+        FROM SalesLT.Product
+        WHERE Name LIKE '%mountain%';
+            aceita todos os valores para nome que tenho 'mountain' (mesmo que tenham ou não outros caracteres no seu início ou fim (neste caso))
+
+        SELECT ProductName, ListPrice
+        FROM SalesLT.Product
+        WHERE ProductName LIKE 'Mountain Bike Socks, _';
+            aceita todas as linhas que tenham nome de produto começado por 'Mountain Bike Socks, ' e que tenham apenas um qualquer caracter depois
+        
+        SELECT ProductName, ListPrice
+        FROM SalesLT.Product
+        WHERE ProductName LIKE 'Mountain-[0-9][0-9][0-9] %, [0-9][0-9]';
+            aceitas todas as linhas que tenham como nome de produto a string 'Mountain-' seguida de 3 dígitos entre 0 e 9, seguidos de qualquer string, de uma vírgula,
+                de um espaço, e de 2 quaisquer dígitos entre 0 e 9
