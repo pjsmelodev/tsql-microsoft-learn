@@ -1,2 +1,2 @@
-SELECT CAST(CustomerID AS Varchar) + ': ' + CompanyName AS CustomerCompany
+SELECT STR(CustomerID) + ': ' + CompanyName
 FROM SalesLT.Customer;
