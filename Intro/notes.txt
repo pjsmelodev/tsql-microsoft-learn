@@ -180,3 +180,28 @@ FROM SalesLT.Customer;
 847 linhas
 
 2.2)
+SELECT PurchaseOrderNumber + ' (' +  STR(RevisionNumber, 1) + ')',
+	CONVERT(nvarchar(30), OrderDate, 102)
+FROM SalesLT.SalesOrderHeader;
+32 linhas
+
+3)
+
+3.1)
+SELECT FirstName + ' ' + ISNULL(MiddleName, '') + ' ' + LastName
+FROM SalesLT.Customer;
+847 linhas
+
+3.2)
+SELECT CustomerID, COALESCE(EmailAddress, Phone) AS PrimaryContact
+FROM SalesLT.Customer;
+847 linhas
+
+3.3)
+ SELECT SalesOrderID, OrderDate,
+     CASE
+         WHEN ShipDate IS NULL THEN 'Awaiting Shipment'
+         ELSE 'Shipped'
+     END AS ShippingStatus
+ FROM SalesLT.SalesOrderHeader;
+ 32 linhas
