@@ -1,0 +1,26 @@
+
+FUNCÇÕES ESCALARES:
+    Retornam um único valor e habitualmente funcionam em apenas uma linha de dados
+    exemplo:
+        SELECT  SalesOrderID, OrderDate,
+            YEAR(OrderDate) AS OrderYear,
+            DATENAME(mm, OrderDate) AS OrderMonth,
+            DAY(OrderDate) AS OrderDay,
+            DATENAME(dw, OrderDate) AS OrderWeekDay,
+            DATEDIFF(yy,OrderDate, GETDATE()) AS YearsSinceOrder
+        FROM Sales.SalesOrderHeader;
+
+FUNÇÕES LÓGICAS:
+
+IIF:
+    exemplo:
+        SELECT AddressType,
+            IIF(AddressType = 'Main Office', 'Billing', 'Mailing') AS UseAddressFor
+        FROM Sales.CustomerAddress;
+
+CHOOSE:
+    Recebe uma expressão ou valor integer e retorna o valor correspondente, por posição de base 1, de uma lista
+    exemplo:
+        SELECT SalesOrderID, Status,
+        CHOOSE(Status, 'Ordered', 'Shipped', 'Delivered') AS OrderStatus    -> se o status for 1 devolve Ordered, se for 2 devolve Shipped, etc...
+        FROM Sales.SalesOrderHeader;
