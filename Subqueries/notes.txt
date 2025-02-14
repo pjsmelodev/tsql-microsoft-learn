@@ -41,3 +41,10 @@ EXISTS:
             (SELECT * 
             FROM Sales.SalesOrderHeader AS o
             WHERE o.CustomerID = c.CustomerID);
+
+KNOWLEDGE CHECK:
+1. A query with a subquery in the WHERE clause returns the following error: Msg 512, Level 16, State 1, Line 17 Subquery returned more than 1 value. This isn't permitted when the subquery follows =, !=, <, <= , >, >= or when the subquery is used as an expression. What can we do to fix this error?
+    Change the operater introducing the subquery to IN or NOT IN
+
+2. Which of the following statements is true of correlated subqueries?
+    A correlated subquery references a value in the outer query
