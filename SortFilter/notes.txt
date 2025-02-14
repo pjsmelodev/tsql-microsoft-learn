@@ -154,3 +154,14 @@ LIKE:
         WHERE ProductName LIKE 'Mountain-[0-9][0-9][0-9] %, [0-9][0-9]';
             aceitas todas as linhas que tenham como nome de produto a string 'Mountain-' seguida de 3 dígitos entre 0 e 9, seguidos de qualquer string, de uma vírgula,
                 de um espaço, e de 2 quaisquer dígitos entre 0 e 9
+
+KNOWLEDGE CHECK:
+
+1. You write a Transact-SQL query to list the available sizes for products. Each individual size should be listed only once. Which query should you use?
+    SELECT DISTINCT Size FROM Production.Product;
+
+2. You must return the InvoiceNo and TotalDue columns from the Sales.Invoice table in decreasing order of TotalDue value. Which query should you use?
+    SELECT InvoiceNo, TotalDue FROM Sales.Invoice ORDER BY TotalDue DESC;
+
+3. Complete this query to return only products that have a Category value of 2 or 4: SELECT Name, Price FROM Production.Product Which clause should you add?
+    WHERE Category IN (2, 4);
