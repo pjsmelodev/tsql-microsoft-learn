@@ -1,0 +1,43 @@
+SUBQUERY:
+    Um SELECT statement aninhado noutro
+
+SCALAR SUBQUERIES:
+    exemplo:
+        SELECT MAX(SalesOrderID)
+        FROM Sales.SalesOrderHeader
+        
+        seleciona o SalesOrderID mais elevado. Devolve apenas um valor
+
+        SELECT SalesOrderID, ProductID, OrderQty
+        FROM Sales.SalesOrderDetail
+        WHERE SalesOrderID = 
+            (SELECT MAX(SalesOrderID)
+            FROM Sales.SalesOrderHeader);
+
+MULTI-VALUED SUBQUERIES:
+    exemplo:
+        SELECT CustomerID, SalesOrderID
+        FROM Sales.SalesOrderHeader
+        WHERE CustomerID IN (
+            SELECT CustomerID
+            FROM Sales.Customer
+            WHERE CountryRegion = 'Canada');
+
+CORRELATED SUBQUERIES:
+    exemplo:
+        SELECT SalesOrderID, CustomerID, OrderDate
+        FROM SalesLT.SalesOrderHeader AS o1
+        WHERE SalesOrderID =
+            (SELECT MAX(SalesOrderID)
+            FROM SalesLT.SalesOrderHeader AS o2
+            WHERE o2.CustomerID = o1.CustomerID)
+        ORDER BY CustomerID, OrderDate;
+
+EXISTS:
+    exemplo:
+        SELECT CustomerID, CompanyName, EmailAddress 
+        FROM Sales.Customer AS c 
+        WHERE EXISTS
+            (SELECT * 
+            FROM Sales.SalesOrderHeader AS o
+            WHERE o.CustomerID = c.CustomerID);
