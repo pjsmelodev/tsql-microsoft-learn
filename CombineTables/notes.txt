@@ -45,3 +45,14 @@ FULL OUTER JOIN:
     Pouco usado
     Devolve todas as linhas que fazem match em embas tabelas, depois todas as linhas que fazem match na tabela da esquerda mas que não têm match na tabela da direita
         e depois todas as linhas que fazem match na tabela da direita que não têm match na tabela da esquerda
+
+CROSS JOIN:
+    Resulta em todas as combinações possíveis entre duas tabelas
+    sintaxe:
+        SELECT <select_list>
+        FROM table1 AS t1
+        CROSS JOIN table2 AS t2;
+    exemplo:
+        SELECT emp.FirstName, prd.Name
+        FROM HR.Employee AS emp
+        CROSS JOIN Production.Product AS prd;
