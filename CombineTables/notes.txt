@@ -1,0 +1,47 @@
+JOIN:
+    Usado para combinar informação de múltiplas tabelas (ligadas entre si)
+    exemplos:
+        SELECT p.ProductID, m.Name AS Model, p.Name AS Product
+        FROM SalesLT.Product AS p, SalesLT.ProductModel AS m        -> vai buscar à tabela Product (alias p) e à tabela ProductModel (alias m)
+        WHERE p.ProductModelID = m.ProductModelID;                  -> indica que as tabelas partilham a OK ProductModelID (convém usar chaves primárias)
+
+        SELECT p.ProductID, m.Name AS Model, p.Name AS Product
+        FROM SalesLT.Product AS p
+        JOIN SalesLT.ProductModel AS m
+            ON p.ProductModelID = m.ProductModelID;
+
+INNER JOIN:
+    É o JOIN usado por defeito
+    Devolve os dados comuns a ambas tabelas
+    exemplos:
+        SELECT emp.FirstName, ord.Amount
+        FROM HR.Employee AS emp 
+        INNER JOIN Sales.SalesOrder AS ord
+            ON emp.EmployeeID = ord.EmployeeID;
+        
+        SELECT p.ProductID, m.Name AS Model, p.Name AS Product
+        FROM Production.Product AS p
+        INNER JOIN Production.ProductModel AS m
+            ON p.ProductModelID = m.ProductModelID
+        ORDER BY p.ProductID;
+
+        SELECT od.SalesOrderID, m.Name AS Model, p.Name AS ProductName, od.OrderQty
+        FROM Production.Product AS p
+        INNER JOIN Production.ProductModel AS m
+            ON p.ProductModelID = m.ProductModelID
+        INNER JOIN Sales.SalesOrderDetail AS od
+            ON p.ProductID = od.ProductID
+        ORDER BY od.SalesOrderID;
+
+OUTTER JOIN:
+    Devolve não só os dados comuns a ambas tabelas como todos os dados de uma das tabelas (esquerda ou direita)
+    exemplo:
+        SELECT emp.FirstName, ord.Amount            -> devolve todos os dados da tabela Employee e apenas os dados que fazem match da tabela SalesOrder (direita)
+        FROM HR.Employee AS emp                         |-> a primeira tabela a ser referenciada (no FROM) é a tabela da esquerda
+        LEFT OUTER JOIN Sales.SalesOrder AS ord
+            ON emp.EmployeeID = ord.EmployeeID;
+
+FULL OUTER JOIN:
+    Pouco usado
+    Devolve todas as linhas que fazem match em embas tabelas, depois todas as linhas que fazem match na tabela da esquerda mas que não têm match na tabela da direita
+        e depois todas as linhas que fazem match na tabela da direita que não têm match na tabela da esquerda
