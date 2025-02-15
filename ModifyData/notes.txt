@@ -15,3 +15,111 @@ INSERT SELECT:
         INSERT [INTO] <table or view> [(column_list)]
         SELECT <column_list> FROM <table_list>...;
     É possível usar os valores de um SELECT diretamente num INSERT
+
+    exemplo:
+        INSERT INTO Sales.Promotion (PromotionName, ProductModelID, Discount, Notes)
+        SELECT DISTINCT 'Get Framed', m.ProductModelID, 0.1, '10% off ' + m.Name
+        FROM Production.ProductModel AS m
+        WHERE m.Name LIKE '%frame%';
+
+SELECT INTO:
+    Cria forçosamente uma nova tabela
+    exemplo:
+        SELECT SalesOrderID, CustomerID, OrderDate, PurchaseOrderNumber, TotalDue
+        INTO Sales.Invoice
+        FROM Sales.SalesOrderHeader;
+
+GERAR VALORES AUTOMATICÁTICOS:
+
+IDENTITY:
+    É automaticamente not nullable
+    Especificar nulabilidade com NULL gera erro (chave)
+    exemplo:
+        CREATE TABLE Sales.Promotion
+        (
+            PromotionID int IDENTITY PRIMARY KEY,
+            PromotionName varchar(20),
+            StartDate datetime NOT NULL DEFAULT GETDATE(),
+            ProductModelID int NOT NULL REFERENCES Production.ProductModel(ProductModelID),
+            Discount decimal(4,2) NOT NULL,
+            Notes nvarchar(max) NULL
+        );
+
+SCOPE_IDENTITY:
+    Retorna o valor identidade mais recente na mesma sessão e escopo
+
+INDENT_CURRENT:
+    Devolve o valor identidade mais recente de uma tabela específica
+    exemplo:
+        SELECT IDENT_CURRENT('Sales.Promotion');
+
+OVERRIDE A VALORES DE IDENTIDADE:
+    exemplo:
+        SET IDENTITY_INSERT SalesLT.Promotion ON;
+
+        INSERT INTO SalesLT.Promotion (PromotionID, PromotionName, ProductModelID, Discount)
+        VALUES
+        (20, 'Another short sale',37, 0.3);
+
+        SET IDENTITY_INSERT SalesLT.Promotion OFF;
+
+SEQUENCE:
+    exemplos:
+        CREATE SEQUENCE Sales.InvoiceNumber AS INT
+        START WITH 1000 INCREMENT BY 1;
+
+        INSERT INTO Sales.ResellerInvoice
+        VALUES
+        (NEXT VALUE FOR Sales.InvoiceNumber, 2, GETDATE(), 'PO12345', 107.99);
+
+UPDATE:
+    sintaxe:
+        UPDATE <TableName>
+        SET 
+        <ColumnName> = { expression | DEFAULT | NULL }
+        {,…n}
+        WHERE <search_conditions>;
+    
+    exemplo:
+        UPDATE Sales.Promotion
+        SET Notes = '25% off socks'
+        WHERE PromotionID = 2;
+
+DELETE:
+    sintaxe:
+        DELETE [FROM] <TableName>
+        WHERE <search_conditions>;
+    
+    exemplo:
+        DELETE FROM Production.Product
+        WHERE discontinued = 1;
+
+TRUNCATE:
+    Apaga todas as linhas de uma tabela
+
+    exemplo:
+       TRUNCATE TABLE Sales.Sample; 
+
+MERGE:
+    exemplo:
+        MERGE INTO schema_name.table_name AS TargetTbl
+        USING (SELECT <select_list>) AS SourceTbl
+        ON (TargetTbl.col1 = SourceTbl.col1)
+        WHEN MATCHED THEN 
+            UPDATE SET TargetTbl.col2 = SourceTbl.col2
+        WHEN NOT MATCHED [BY TARGET] THEN
+            INSERT (<column_list>)
+            VALUES (<value_list>)
+        WHEN NOT MATCHED BY SOURCE THEN
+            DELETE;
+
+KNOWLEDGE CHECK:
+
+1. You want to insert data from the Store.Product table into an existing table named Sales.Offer. Which statement should you use? 
+   INSERT INTO Sales.Offer SELECT ProductID, Name, Price*0.9 FROM Store.Product; 
+
+2. You need to determine the most recently inserted IDENTITY column in the Sales.Invoice table. Which statement should you use?
+    SELECT IDENT_CURRENT('Sales.Invoice');
+
+3. You must increase the Price of all products in category 2 by 10%. Which statement should you use?
+    UPDATE Store.Product SET Price = Price * 1.1 WHERE Category = 2;
