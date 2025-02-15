@@ -24,3 +24,57 @@ CHOOSE:
         SELECT SalesOrderID, Status,
         CHOOSE(Status, 'Ordered', 'Shipped', 'Delivered') AS OrderStatus    -> se o status for 1 devolve Ordered, se for 2 devolve Shipped, etc...
         FROM Sales.SalesOrderHeader;
+
+AGGREGATE FUNCTIONS:
+
+SUM:
+
+AVG:
+
+MIN:
+
+COUNT ou COUNT_BIG: retornam um int ou um big_int respetivamente
+
+    exemplos:
+        SELECT  AVG(ListPrice) AS AveragePrice,
+                MIN(ListPrice) AS MinimumPrice,
+                MAX(ListPrice) AS MaximumPrice
+        FROM Production.Product;
+        WHERE ProductCategoryID = 15;
+
+        SELECT  ProductCategoryID, AVG(ListPrice) AS AveragePrice,
+                MIN(ListPrice) AS MinimumPrice,
+                MAX(ListPrice) AS MaxiimumPrice
+        FROM Production.Product;
+
+DISTINCT:
+    exemplo:
+        SELECT COUNT(DISTINCT CustomerID) AS UniqueCustomers
+        FROM Sales.SalesOrderHeader;
+
+GROUP BY: continua a precisar de ORDER BY
+    exemplo:
+        SELECT CustomerID, COUNT(*) AS OrderCount
+        FROM Sales.SalesOrderHeader
+        GROUP BY CustomerID
+        ORDER BY CustomerID;
+
+HAVING: útil para filtrar dados segundos condições
+    exemplo:
+        SELECT  CustomerID,
+                COUNT(*) AS OrderCount
+        FROM Sales.SalesOrderHeader
+        GROUP BY CustomerID
+        HAVING COUNT(*) > 10;
+
+        HAVING vem depois do WHERE que vem depois do FROM
+
+KNOWLEDGE CHECK:
+1. You run the following query: SELECT OrderNo, CHOOSE(Status, 'Ordered', 'Shipped', 'Delivered') AS OrderState FROM Sales.Order; Which OrderState value is returned for rows with a Status value of 2?
+    Shipped
+
+2. You must return the number of customers in each city. Which query should you use?
+    SELECT City, COUNT(*) AS CustomerCount FROM Sales.Customer GROUP BY City;
+
+3. You must return a row for each category with an average price over 10.00. Which query should you use?
+    SELECT Category, AVG(Price) FROM Store.Product GROUP BY Category HAVING AVG(Price) > 10.00;
