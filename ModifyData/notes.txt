@@ -1,0 +1,17 @@
+INSERT: adiciona uma ou mais linhas a uma tabela
+    sintaxe:
+        INSERT [INTO] <Table> [(column_list)]
+        VALUES ([ColumnName or an expression or DEFAULT or NULL],...n)
+
+    exemplo:
+        INSERT INTO Sales.Promotion(PromotionName,StartDate,ProductModelID,Discount,Notes)
+        VALUES ('Clearance Sale', '01/01/2021', 23, 0.1, '10% discount');
+    Como todos os valores da tabela estão a ser introduzidos é possível omitir os nomes das colunas
+    Quando forem introduzidos apenas alguns valores é necessário especificar o nome da tabela
+    É sensível à ordem em que os tipos são declarados
+
+INSERT SELECT:
+    sintaxe:
+        INSERT [INTO] <table or view> [(column_list)]
+        SELECT <column_list> FROM <table_list>...;
+    É possível usar os valores de um SELECT diretamente num INSERT
